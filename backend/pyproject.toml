@@ -1,0 +1,50 @@
+[build-system]
+requires = [ "poetry-core",]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = [ "Tres Sims <tres.sims95@gmail.com>",]
+readme = "README.md"
+
+[tool.black]
+line-length = 95
+target-version = [ "py39",]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.0.1"
+psycopg2-binary = "^2.9.9"
+django-cors-headers = "^4.3.1"
+djangorestframework = "^3.14.0"
+django-environ = "^0.11.2"
+djangorestframework-camel-case = "^1.4.2"
+django-anymail = "^10.2"
+zygoat-django = "^1.0.1"
+psycogreen = "^1.0.2"
+
+[tool.poetry.dependencies.gunicorn]
+extras = [ "gevent",]
+version = "^21.2.0"
+
+[tool.poetry.dependencies.uvicorn]
+extras = [ "standard",]
+version = "^0.27.0"
+
+[tool.poetry.group.dev.dependencies]
+pytz = "^2023.3.post1"
+factory-boy = "^3.3.0"
+flake8-black = "^0.3.6"
+bandit = "^1.7.7"
+flake8 = "^7.0.0"
+flake8-commas = "^2.1.0"
+flake8-quotes = "^3.3.2"
+flake8-debugger = "^4.1.2"
+flake8-builtins = "^2.2.0"
+flake8-deprecated = "^2.2.1"
+flake8-comprehensions = "^3.14.0"
+pytest = "^7.4.4"
+pytest-django = "^4.7.0"
+pytest-cov = "^4.1.0"

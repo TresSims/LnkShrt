@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile.local
+    depends_on:
+    - db
+    volumes:
+    - ./backend:/code
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile.local
+    volumes:
+      - ./frontend:/code
+      - /code/node_modules
+      - /code/.next
+  db:
+    environment:
+    - POSTGRES_PASSWORD=postgres
+    image: postgres:latest
+  caddy:
+    image: caddy:latest
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+version: '3.4'

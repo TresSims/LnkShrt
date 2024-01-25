@@ -1,0 +1,8 @@
+FROM node:latest
+
+WORKDIR /code
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+CMD yarn run dev

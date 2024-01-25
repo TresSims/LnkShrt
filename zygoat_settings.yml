@@ -1,0 +1,5 @@
+images:
+  NODE: node:latest
+  PYTHON: python:latest
+name: LnkShrt
+version: 1.20.0
