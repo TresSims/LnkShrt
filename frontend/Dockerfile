@@ -10,4 +10,4 @@ COPY . .
 RUN yarn build
 
 EXPOSE 3000
-CMD yarn run -p 3000
+CMD yarn run start

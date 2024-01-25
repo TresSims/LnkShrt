@@ -23,25 +23,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-6zzt*id*zf54l5@jet&z5xgcvqqitwwbbsx79i1sl6ii4u)oox"
+SECRET_KEY = env.str(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure-6zzt*id*zf54l5@jet&z5xgcvqqitwwbbsx79i1sl6ii4u)oox",
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+PRODUCTION = env.bool("DJANGO_PRODUCTION", default=False)
+DEBUG = False if PRODUCTION else env.bool("DJANGO_DEBUG", default=True)
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "shortener.apps.ShortenerConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
+    # "rest_framework",
     "zygoat_django",
+    "shortener.apps.ShortenerConfig",
 ]
 
 MIDDLEWARE = [
