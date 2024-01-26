@@ -10,6 +10,9 @@ jobs:
         runs-on: ubuntu-latest
         permissions:
           packages: write
+        strategy:
+          matrix:
+            container: [frontend, backend]
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
@@ -26,10 +29,10 @@ jobs:
               with:
                 context: ./backend
                 push: true
-                tags: ghcr.io/tressims/lnkshrt_backend
+                tags: ghcr.io/tressims/lnkshrt_${{ matrix.container }}
             - name: Build and Publish Frontend
               uses: docker/build-push-action@v5
               with:
                 context: ./frontend
                 push: true
-                tags: ghcr.io/tressims/lnkshrt_frontend
+                tags: ghcr.io/tressims/lnkshrt_${{ matrix.container }}
