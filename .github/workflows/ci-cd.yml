@@ -27,12 +27,6 @@ jobs:
             - name: Build and Publish Backend
               uses: docker/build-push-action@v5
               with:
-                context: ./backend
-                push: true
-                tags: ghcr.io/tressims/lnkshrt_${{ matrix.container }}
-            - name: Build and Publish Frontend
-              uses: docker/build-push-action@v5
-              with:
-                context: ./frontend
+                context: ./${{ matrix.container }}
                 push: true
                 tags: ghcr.io/tressims/lnkshrt_${{ matrix.container }}
