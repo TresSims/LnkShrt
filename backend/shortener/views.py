@@ -23,7 +23,6 @@ class LinkView(APIView):
         serializer = LinkSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            print(serializer.data)
             return JsonResponse(serializer.data, status=201)
 
         # Return an error if a new valid link cannot be created
