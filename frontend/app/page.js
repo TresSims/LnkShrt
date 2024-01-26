@@ -31,7 +31,7 @@ export default function Home() {
         setRequestError(false);
 
         setShortLink(
-          window.location.origin + "/api/?link=" + response.data["link"]
+          window.location.origin + "/api/?link=" + response.data["id"]
         );
       })
       .catch(function (err) {
