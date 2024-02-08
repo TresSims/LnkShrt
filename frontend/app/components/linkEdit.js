@@ -1,30 +1,22 @@
-"use client";
-
 import Axios from "axios";
-import { useState } from "react";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 export default function LinkEdit({ id, location }) {
-  const [removed, setRemoved] = useState(false);
-  var shortLink = window.location.origin + "/api/?link=" + id;
+  const queryClient = useQueryClient();
 
-  let removeLink = (e) => {
-    Axios.delete("/api/" + id + "/", {
-      params: {
-        link: id,
-      },
-    })
-      .then(function (response) {
-        console.log(response);
-        setRemoved(true);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
+  let shortLink = window.location.origin + `/api/${id}/`;
 
-  if (removed) {
-    return <></>;
-  }
+  const mutation = useMutation({
+    mutationFn: () =>
+      Axios.delete(`/api/${id}/`, {
+        params: {
+          link: id,
+        },
+      }).then((response) => response.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["links"] });
+    },
+  });
 
   return (
     <div className="table-row">
@@ -52,7 +44,9 @@ export default function LinkEdit({ id, location }) {
       </div>
       <div className="table-cell">
         <button
-          onClick={removeLink}
+          onClick={() => {
+            mutation.mutate();
+          }}
           className="place-items-center bg-red-500 hover:bg-red-400 active:bg-red-600 p-2 rounded-full"
         >
           <svg

@@ -1,32 +1,22 @@
 import Axios from "axios";
 import LinkEdit from "./linkEdit";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 
-async function getLinks(page) {
-  return await Axios.get("/api/list/", {
-    params: {
-      page: page,
-      length: 5,
-    },
-  })
-    .then(function (response) {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch(function (err) {
-      console.log(err);
-      return;
-    });
-}
+export default function LinkList({ page }) {
+  const queryClient = useQueryClient();
+  const { isPending, error, data } = useQuery({
+    queryKey: ["links", page],
+    queryFn: () =>
+      Axios.get("/api/list/", {
+        params: {
+          page: page,
+          length: 5,
+        },
+      }).then((response) => response.data),
+  });
 
-export default async function LinkList({ page }) {
-  const data = await getLinks(page);
-  console.log(data);
-
-  if (data) {
-    return data["data"].map((link, i) => {
-      return <LinkEdit key={i} location={link.link} id={link.id} />;
-    });
-  } else {
+  if (isPending) return "Loading...";
+  if (error)
     return (
       <div className="text-red-500 py-5 flex flex-row justify-center place-items-center">
         <svg
@@ -44,5 +34,7 @@ export default async function LinkList({ page }) {
         Something went Wrong! Try again later.
       </div>
     );
-  }
+  return data["data"].map((link, i) => {
+    return <LinkEdit key={i} location={link.link} id={link.id} />;
+  });
 }
