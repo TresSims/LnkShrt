@@ -4,5 +4,6 @@ from .views import LinkView, LinkListView
 
 urlpatterns = [
     path("", LinkView.as_view()),
-    path("list/", LinkListView.as_view())
+    path("<int:id>/", LinkView.as_view()),
+    path("list/", LinkListView.as_view()),
 ]

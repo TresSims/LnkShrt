@@ -1,19 +1,30 @@
 "use client";
 
 import Axios from "axios";
+import { useState } from "react";
 
 export default function LinkEdit({ id, location }) {
+  const [removed, setRemoved] = useState(false);
   var shortLink = window.location.origin + "/api/?link=" + id;
 
-  let removeLink = () => {
-    Axios.delete("/api/", {
+  let removeLink = (e) => {
+    Axios.delete("/api/" + id + "/", {
       params: {
-        id: id,
+        link: id,
       },
     })
-      .then(function (response) {})
-      .catch(function (err) {});
+      .then(function (response) {
+        console.log(response);
+        setRemoved(true);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   };
+
+  if (removed) {
+    return <></>;
+  }
 
   return (
     <div className="table-row">
@@ -23,7 +34,7 @@ export default function LinkEdit({ id, location }) {
       <div className="table-cell">
         <a href={location}>{location}</a>
       </div>
-      <div className="table-cell flex flex-row justify-center place-items-center">
+      <div className="table-cell flex-row justify-center place-items-center">
         <button
           onClick={() => navigator.clipboard.writeText(shortLink)}
           className="place-items-center bg-blue-500 hover:bg-blue-400 active:bg-blue-600 p-2 rounded-full"
@@ -40,7 +51,10 @@ export default function LinkEdit({ id, location }) {
         </button>
       </div>
       <div className="table-cell">
-        <button className="place-items-center bg-red-500 hover:bg-red-400 active:bg-red-600 p-2 rounded-full">
+        <button
+          onClick={removeLink}
+          className="place-items-center bg-red-500 hover:bg-red-400 active:bg-red-600 p-2 rounded-full"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

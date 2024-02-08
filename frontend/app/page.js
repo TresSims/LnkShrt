@@ -30,9 +30,7 @@ export default function Home() {
       .then(function (response) {
         setRequestError(false);
 
-        setShortLink(
-          window.location.origin + "/api/?link=" + response.data["id"],
-        );
+        setShortLink(window.location.origin + "/api/" + response.data["id"]);
       })
       .catch(function (err) {
         console.log(err);

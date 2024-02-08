@@ -5,4 +5,4 @@ class Link(models.Model):
     link = models.URLField(blank=False)
 
     def __str__(self):
-        return f"{self.id} -> {self.long_link}"
+        return f"{self.id} -> {self.link}"

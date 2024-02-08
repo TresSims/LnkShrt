@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser
-from rest_framework.generics import DestroyAPIView
 
 from django.shortcuts import redirect
 
@@ -11,6 +10,8 @@ from .serializers import LinkSerializer
 
 # View for interacting with individual links
 class LinkView(APIView):
+    http_method_names = ["get", "post", "delete"]
+
     # Create a new shortlink
     def post(self, request):
         data = JSONParser().parse(request)["params"]
@@ -31,10 +32,10 @@ class LinkView(APIView):
         return JsonResponse(serializer.errors, status=400)
 
     # Travel to an existing shortlink
-    def get(self, request):
+    def get(self, request, id):
         # Try to find the existing shortlink in the database
         try:
-            link = Link.objects.get(id=request.GET["link"])
+            link = Link.objects.get(id=id)
         # If it doesn't exist, return to the home page
         except Link.DoesNotExist:
             return redirect("/")
@@ -42,29 +43,38 @@ class LinkView(APIView):
         serializer = LinkSerializer(link)
         return redirect(serializer.data["link"])
 
-    def delete(self, request):
-        data = JSONParser().parse(request)["params"]
-
-        # try to remove the existing shorlink from the database
+    # Delete link
+    def delete(self, request, id):
         try:
-            link = Link.objects.get(id=data["link"])
+            link = Link.objects.get(id=id)
             link.delete()
         except Link.DoesNotExist:
-            continue
+            return JsonResponse({}, status=404)
 
-        return Response(status=204)
+        serializer = LinkSerializer(link)
+        return JsonResponse(serializer.data, status=204)
 
 
 # View for interacting with lists of links
 class LinkListView(APIView):
-    results_per_page = 5
 
     def get(self, request):
-        page = request.GET["page"]
+        page = abs(int(request.GET["page"]))
+        results_per_page = abs(int(request.GET["length"]))
+
+        if page < 1:
+            page = 1
+
+        if results_per_page < 1:
+            results_per_page = 1
+
         first_result = (page - 1) * results_per_page
         last_result = page * results_per_page
 
-        results = Link.objects.all()[first_result:last_result]
+        links = Link.objects.all()
+        size = links.count()
+        results = links[first_result:last_result]
         serializer = LinkSerializer(results, many=True)
+        response = {"size": size, "data": serializer.data}
 
-        return(serializer.data, status=200)
+        return JsonResponse(response, status=200, safe=False)
