@@ -7,14 +7,20 @@ import { useState } from "react";
 export default function LinkList({ data, size }) {
   const [currentPage, setCurrentPage] = useState(1);
 
+  let pageSize = 5;
+
   const paginate = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  let numPages = parseInt(size / 5);
-  if (size % 5 > 0) {
+  let numPages = parseInt(size / pageSize);
+  if (size % pageSize > 0) {
     numPages += 1;
   }
+
+  let startIndex = (currentPage - 1) * pageSize;
+  let endIndex = currentPage * pageSize;
+  let pageData = data.slice(startIndex, endIndex);
 
   return (
     <>
@@ -28,7 +34,7 @@ export default function LinkList({ data, size }) {
           </div>
         </div>
         <div className="table-row-group">
-          {data.map((link, i) => {
+          {pageData.map((link, i) => {
             return <LinkEdit key={i} id={link.id} location={link.link} />;
           })}
         </div>
