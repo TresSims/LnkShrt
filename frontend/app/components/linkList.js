@@ -13,7 +13,7 @@ export default function LinkList({ data, size }) {
     setCurrentPage(newPage);
   };
 
-  let numPages = parseInt(size / pageSize);
+  let numPages = Math.floor(size / pageSize);
   if (size % pageSize > 0) {
     numPages += 1;
   }
@@ -34,8 +34,8 @@ export default function LinkList({ data, size }) {
           </div>
         </div>
         <div className="table-row-group">
-          {pageData.map((link, i) => {
-            return <LinkEdit key={i} id={link.id} location={link.link} />;
+          {pageData.map((link) => {
+            return <LinkEdit key={link.id} id={link.id} location={link.link} />;
           })}
         </div>
       </div>

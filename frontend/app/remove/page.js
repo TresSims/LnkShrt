@@ -8,12 +8,13 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 
+const getData = async () => {
+  return (await Axios.get("/api/list/")).data;
+};
+
 export default function Remove() {
   const queryClient = useQueryClient();
 
-  const getData = () => {
-    return Axios.get("/api/list/").then((response) => response.data);
-  };
 
   const { isPending, error, data } = useQuery({
     queryKey: ["links"],
@@ -42,7 +43,7 @@ export default function Remove() {
 
   return (
     <div>
-      <LinkList data={data["data"]} size={parseInt(data["size"])} />{" "}
+      <LinkList data={data.data} size={data.size} />
     </div>
   );
 }
