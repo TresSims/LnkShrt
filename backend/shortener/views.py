@@ -13,7 +13,7 @@ class LinkView(APIView):
     http_method_names = ["get", "post", "delete"]
 
     # Create a new shortlink
-    def post(self, request):
+    def post(self, request, id=-1):
         data = JSONParser().parse(request)["params"]
 
         # Return existing link if one exists
@@ -32,7 +32,7 @@ class LinkView(APIView):
         return JsonResponse(serializer.errors, status=400)
 
     # Travel to an existing shortlink
-    def get(self, request, id):
+    def get(self, request, id=-1):
         # Try to find the existing shortlink in the database
         try:
             link = Link.objects.get(id=id)
@@ -44,7 +44,7 @@ class LinkView(APIView):
         return redirect(serializer.data["link"])
 
     # Delete link
-    def delete(self, request, id):
+    def delete(self, request, id=-1):
         try:
             link = Link.objects.get(id=id)
             link.delete()
