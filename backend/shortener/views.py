@@ -8,7 +8,10 @@ from .models import Link
 from .serializers import LinkSerializer
 
 
+# View for interacting with individual links
 class LinkView(APIView):
+    http_method_names = ["get", "post", "delete"]
+
     # Create a new shortlink
     def post(self, request):
         data = JSONParser().parse(request)["params"]
@@ -29,13 +32,36 @@ class LinkView(APIView):
         return JsonResponse(serializer.errors, status=400)
 
     # Travel to an existing shortlink
-    def get(self, request):
+    def get(self, request, id):
         # Try to find the existing shortlink in the database
         try:
-            link = Link.objects.get(id=request.GET["link"])
+            link = Link.objects.get(id=id)
         # If it doesn't exist, return to the home page
         except Link.DoesNotExist:
             return redirect("/")
 
         serializer = LinkSerializer(link)
         return redirect(serializer.data["link"])
+
+    # Delete link
+    def delete(self, request, id):
+        try:
+            link = Link.objects.get(id=id)
+            link.delete()
+        except Link.DoesNotExist:
+            return JsonResponse({}, status=404)
+
+        serializer = LinkSerializer(link)
+        return JsonResponse(serializer.data, status=204)
+
+
+# View for interacting with lists of links
+class LinkListView(APIView):
+
+    def get(self, request):
+        links = Link.objects.all()
+        size = links.count()
+        serializer = LinkSerializer(links, many=True)
+        response = {"size": size, "data": serializer.data}
+
+        return JsonResponse(response, status=200)
