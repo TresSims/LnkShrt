@@ -1,67 +1,48 @@
 "use client";
 
-import { useState } from "react";
 import LinkList from "../components/linkList.js";
-import PageList from "../components/pageList.js";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Axios from "axios";
+import {
+  useQueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
 export default function Remove() {
-  let [page, setPage] = useState(1);
-  let [maxPage, setMaxPage] = useState(3);
+  const queryClient = useQueryClient();
 
-  const queryClient = new QueryClient();
-
-  const incrementPage = () => {
-    let newPage = page + 1;
-    if (newPage > maxPage) {
-      newPage = maxPage;
-    }
-    setPage(newPage);
+  const getData = () => {
+    return Axios.get("/api/list/").then((response) => response.data);
   };
 
-  const decrementPage = () => {
-    let newPage = page - 1;
-    if (newPage < 1) {
-      newPage = 1;
-    }
+  const { isPending, error, data } = useQuery({
+    queryKey: ["links"],
+    queryFn: getData,
+  });
 
-    setPage(newPage);
-  };
+  if (isPending) return "Loading...";
+  if (error)
+    return (
+      <div className="text-red-500 py-5 flex flex-row justify-center place-items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            fillRule="evenodd"
+            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+            clipRule="evenodd"
+          />
+        </svg>
+        Something went Wrong! Try again later.
+      </div>
+    );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="table text-white w-full rounded-md">
-        <div className="table-header-group text-lg font-black">
-          <div className="table-row">
-            <div className="table-cell border-b-2 p-2">Short Link</div>
-            <div className="table-cell border-b-2 p-2">Long Link</div>
-            <div className="table-cell border-b-2 p-2">Copy Link</div>
-            <div className="table-cell border-b-2 p-2">Remove Link</div>
-          </div>
-        </div>
-        <div className="table-row-group ">
-          <LinkList page={page} />
-        </div>
-      </div>
-      <div className="flex flex-row justify-between">
-        <button
-          onClick={decrementPage}
-          className="w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4"
-        >
-          Previous Page
-        </button>
-        <PageList
-          currentPage={page}
-          goToPage={setPage}
-          setMaxPage={setMaxPage}
-        />
-        <button
-          onClick={incrementPage}
-          className="w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4 "
-        >
-          Next Page
-        </button>
-      </div>
-    </QueryClientProvider>
+    <div>
+      <LinkList data={data["data"]} size={parseInt(data["size"])} />{" "}
+    </div>
   );
 }

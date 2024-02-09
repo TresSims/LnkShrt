@@ -59,22 +59,9 @@ class LinkView(APIView):
 class LinkListView(APIView):
 
     def get(self, request):
-        page = abs(int(request.GET["page"]))
-        results_per_page = abs(int(request.GET["length"]))
-
-        if page < 1:
-            page = 1
-
-        if results_per_page < 1:
-            results_per_page = 1
-
-        first_result = (page - 1) * results_per_page
-        last_result = page * results_per_page
-
         links = Link.objects.all()
         size = links.count()
-        results = links[first_result:last_result]
-        serializer = LinkSerializer(results, many=True)
+        serializer = LinkSerializer(links, many=True)
         response = {"size": size, "data": serializer.data}
 
-        return JsonResponse(response, status=200, safe=False)
+        return JsonResponse(response, status=200)
