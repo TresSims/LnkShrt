@@ -3,14 +3,14 @@
 import LinkList from "../components/linkList";
 import Error from "../components/error";
 import Axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import Pagination from "../components/pagination.js";
 
 const getData = async (page, pageSize) => {
   return (
     await Axios.get("/api/list/", {
-      params: { page: page, pageSize: page_size },
+      params: { page: page, page_size: pageSize },
     })
   ).data;
 };
@@ -31,8 +31,13 @@ export default function Remove() {
     },
   });
 
-  if (isPending) return "Loading...";
-  if (error) return <Error />;
+  useEffect(() => {
+    if (error) {
+      if (error.response.status == "404") {
+        paginate(currentPage - 1);
+      }
+    }
+  }, [error]);
 
   return (
     <div>
