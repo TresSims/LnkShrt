@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser
 
 from django.shortcuts import redirect
@@ -13,7 +14,7 @@ class LinkView(APIView):
     http_method_names = ["get", "post", "delete"]
 
     # Create a new shortlink
-    def post(self, request):
+    def post(self, request, id=-1):
         data = JSONParser().parse(request)["params"]
 
         # Return existing link if one exists
@@ -32,7 +33,7 @@ class LinkView(APIView):
         return JsonResponse(serializer.errors, status=400)
 
     # Travel to an existing shortlink
-    def get(self, request, id):
+    def get(self, request, id=-1):
         # Try to find the existing shortlink in the database
         try:
             link = Link.objects.get(id=id)
@@ -44,7 +45,7 @@ class LinkView(APIView):
         return redirect(serializer.data["link"])
 
     # Delete link
-    def delete(self, request, id):
+    def delete(self, request, id=-1):
         try:
             link = Link.objects.get(id=id)
             link.delete()
@@ -56,12 +57,13 @@ class LinkView(APIView):
 
 
 # View for interacting with lists of links
-class LinkListView(APIView):
+class LinkListView(APIView, PageNumberPagination):
+    serializer_class = LinkSerializer
+    page_size = 5
+    page_size_query_param = "page_size"
 
     def get(self, request):
-        links = Link.objects.all()
-        size = links.count()
-        serializer = LinkSerializer(links, many=True)
-        response = {"size": size, "data": serializer.data}
-
-        return JsonResponse(response, status=200)
+        entity = Link.objects.all()
+        results = self.paginate_queryset(entity, request, view=self)
+        serializer = LinkSerializer(results, many=True)
+        return self.get_paginated_response(serializer.data)

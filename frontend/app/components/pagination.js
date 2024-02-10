@@ -1,4 +1,8 @@
-export default function Pagination({ page, pageCount, goToPage }) {
+export default function Pagination({ page, entries, pageLength, goToPage }) {
+  let pageCount = Math.trunc(entries / pageLength);
+  if (entries % pageLength > 0) {
+    pageCount++;
+  }
   const arr = new Array(pageCount).fill(0);
 
   const incrementPage = () => {
