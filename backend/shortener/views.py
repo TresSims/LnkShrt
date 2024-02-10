@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser
 
 from django.shortcuts import redirect
@@ -56,12 +57,13 @@ class LinkView(APIView):
 
 
 # View for interacting with lists of links
-class LinkListView(APIView):
+class LinkListView(APIView, PageNumberPagination):
+    serializer_class = LinkSerializer
+    page_size = 5
+    page_size_query_param = "page_size"
 
     def get(self, request):
-        links = Link.objects.all()
-        size = links.count()
-        serializer = LinkSerializer(links, many=True)
-        response = {"size": size, "data": serializer.data}
-
-        return JsonResponse(response, status=200)
+        entity = Link.objects.all()
+        results = self.paginate_queryset(entity, request, view=self)
+        serializer = LinkSerializer(results, many=True)
+        return self.get_paginated_response(serializer.data)

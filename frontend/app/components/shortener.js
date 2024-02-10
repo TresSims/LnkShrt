@@ -16,6 +16,7 @@ export default function Shortener() {
   const [readyToSubmit, setReadyToSubmit] = useState(false);
 
   const mutation = useMutation({
+    queryKey: ["links"],
     mutationFn: (event) => {
       event.preventDefault();
       return addLink(event);
