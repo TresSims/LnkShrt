@@ -7,9 +7,7 @@ import LinkCopy from "./linkCopy";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const addLink = async (event) => {
-  return (
-    await Axios.post("/api/", { params: { link: event.target.link.value } })
-  ).data;
+  return (await Axios.post("/api/", { link: event.target.link.value })).data;
 };
 
 export default function Shortener() {

@@ -15,7 +15,7 @@ class LinkView(APIView):
 
     # Create a new shortlink
     def post(self, request, id=-1):
-        data = JSONParser().parse(request)["params"]
+        data = JSONParser().parse(request)
 
         # Return existing link if one exists
         existing_links = Link.objects.filter(link=data["link"])
