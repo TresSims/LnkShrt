@@ -67,3 +67,6 @@ class LinkListView(APIView, PageNumberPagination):
         results = self.paginate_queryset(entity, request, view=self)
         serializer = LinkSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
+
+    def post(self, request):
+        get(request)
