@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
               </div>
               <div className="flex">
                 <Link
-                  href="/login"
+                  href="/account"
                   className="m-0 p-5 no-underline bg-gradient-to-t to-50% from-blue-500 hover:from-blue-400 active:from-blue-600 border-l-2"
                 >
                   Login

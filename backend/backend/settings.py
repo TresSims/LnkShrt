@@ -31,6 +31,7 @@ SECRET_KEY = env.str(
 PRODUCTION = env.bool("DJANGO_PRODUCTION", default=False)
 DEBUG = False if PRODUCTION else env.bool("DJANGO_DEBUG", default=True)
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3001"]
 
 # Application definition
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     # "rest_framework",
     "zygoat_django",
     "shortener.apps.ShortenerConfig",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -99,6 +101,10 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication"]
+}
 
 
 # Internationalization
