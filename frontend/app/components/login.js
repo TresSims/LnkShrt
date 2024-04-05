@@ -1,12 +1,30 @@
 "use client";
 
+import Axios from "axios";
+
 const login = async (event) => {
-  return;
+  let login_data = await Axios.post("/api/login/", {
+    username: event.target.email,
+    password: event.target.password,
+  }).data;
+
+  return login_data;
 };
 
 export default function Login() {
+  const mutation = useMutation({
+    queryKey: ["account"],
+    mutationFn: (event) => {
+      event.preventDefault();
+      return login(event);
+    },
+  });
+
   return (
-    <form onSubmit={login} className="flex flex-col space-around w-full">
+    <form
+      onSubmit={mutation.mutate}
+      className="flex flex-col space-around w-full"
+    >
       <label className="text-white font-black text-lg pb-4">Login</label>
       <input
         required
