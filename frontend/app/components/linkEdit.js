@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 export default function LinkEdit({ id, location }) {
   const queryClient = useQueryClient();
@@ -8,13 +9,20 @@ export default function LinkEdit({ id, location }) {
 
   let shortLink = window.location.origin + `/api/${id}/`;
 
+  const mutateLink = async () => {
+    let headers = {
+      headers: {
+        "X-CSRFToken": Cookies.get("csrftoken"),
+      },
+    };
+
+    return (await Axios.delete(`/api/${id}/`, {}, headers)).data;
+  };
+
   const mutation = useMutation({
-    mutationFn: () =>
-      Axios.delete(`/api/${id}/`, {
-        params: {
-          link: id,
-        },
-      }).then((response) => response.data),
+    mutationFn: () => {
+      return mutateLink();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["links"] });
     },

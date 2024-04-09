@@ -2,12 +2,19 @@
 
 import React, { useState } from "react";
 import Axios from "axios";
+import Cookies from "js-cookie";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import Error from "./error";
 import LinkCopy from "./linkCopy";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 const addLink = async (event) => {
-  return (await Axios.post("/api/", { link: event.target.link.value })).data;
+  let body = { link: event.target.link.value };
+  let headers = {
+    headers: {
+      "X-CSRFToken": Cookies.get("csrftoken"),
+    },
+  };
+  return (await Axios.post("/api/", body, headers)).data;
 };
 
 export default function Shortener() {
