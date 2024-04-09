@@ -1,31 +1,45 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Axios from "axios";
-
-const login = async (event) => {
-  let login_data = await Axios.post("/api/login/", {
-    username: event.target.email,
-    password: event.target.password,
-  }).data;
-
-  return login_data;
-};
+import Cookies from "js-cookie";
+import ErrorText from "./errorText";
 
 export default function Login() {
-  const mutation = useMutation({
-    queryKey: ["account"],
-    mutationFn: (event) => {
-      event.preventDefault();
-      return login(event);
-    },
-  });
+  const router = useRouter();
+  const [error, setError] = useState("");
+
+  const login = async (event) => {
+    event.preventDefault();
+
+    let body = {
+      username: event.target.email.value,
+      password: event.target.pass.value,
+    };
+
+    let csrf = Cookies.get("csrftoken");
+    let headers = {
+      headers: {
+        "X-CSRFToken": csrf,
+      },
+    };
+
+    Axios.post("/api/login/", body, headers)
+      .then((response) => {
+        Cookies.set("loggedin", true);
+        router.push("/manageAccount");
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response.data.non_field_errors[0]);
+      });
+  };
 
   return (
-    <form
-      onSubmit={mutation.mutate}
-      className="flex flex-col space-around w-full"
-    >
+    <form onSubmit={login} className="flex flex-col space-around w-full">
       <label className="text-white font-black text-lg pb-4">Login</label>
+      <ErrorText error={error} />
       <input
         required
         type="email"

@@ -1,24 +1,96 @@
-const changePassword = async (event) => {
-  return;
-};
+"use client";
 
-const deleteAccount = async (event) => {
-  return;
-};
-
-const logOut = async (event) => {
-  return;
-};
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import Axios from "axios";
+import ErrorText from "./errorText";
 
 export default function ManageAccount() {
+  const router = useRouter();
+  const [error, setError] = useState("");
+
+  const changePassword = async (event) => {
+    event.preventDefault();
+
+    pass1 = event.target.pass1.value;
+    pass2 = event.target.pass2.value;
+    console.log(pass1 + " " + pass2);
+
+    if (pass1 == pass2) {
+      let body = {
+        password: pass1,
+      };
+
+      let csrf = Cookies.get("csrftoken");
+      let headers = {
+        headers: {
+          "X-CSRFToken": csrf,
+        },
+      };
+
+      Axios.post("/api/manageUser/", body, headers)
+        .then((response) => {
+          setError("");
+          Cookies.remove("loggedin");
+          router.push("/login");
+        })
+        .catch((error) => {
+          setError("Something went wrong, try again later.");
+          console.log(error);
+        });
+    } else {
+      setError("passwords must match");
+    }
+  };
+
+  const deleteAccount = async (event) => {
+    let csrf = Cookies.get("csrftoken");
+    let headers = {
+      headers: {
+        "X-CSRFToken": csrf,
+      },
+    };
+
+    Axios.delete("/api/manageUser/", headers)
+      .then((response) => {
+        Cookies.remove("loggedin");
+        router.push("/login");
+      })
+      .catch((error) => {
+        setError("Something went wrong, try again later.");
+        console.log(error);
+      });
+  };
+
+  const logOut = async (event) => {
+    let csrf = Cookies.get("csrftoken");
+    let headers = {
+      headers: {
+        "X-CSRFToken": csrf,
+      },
+    };
+
+    Axios.post("/api/logout/", {}, headers)
+      .then((response) => {
+        Cookies.remove("loggedin");
+        router.push("/login");
+      })
+      .catch((error) => {
+        setError("Something went wrong, try again later.");
+        console.log(error);
+      });
+  };
+
   return (
     <div>
-      <p className="text-white text-lg pb-4">User Email</p>
+      {/* <p className="text-white text-lg pb-4">User Email</p> */}
       <form
         onSubmit={changePassword}
         className="flex flex-col space-around w-full border-2 border-solid border-white rounded-md p-4"
       >
         <label className="text-white text-lg pb-2">Change Password</label>
+        <ErrorText error={error} />
         <input
           required
           type="password"

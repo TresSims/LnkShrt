@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import QueryRoot from "./components/QueryRoot";
+import Cookies from "js-cookie";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,12 +34,22 @@ export default function RootLayout({ children }) {
                   </Link>
                 </div>
                 <div className="flex">
-                  <Link
-                    href="/account"
-                    className="m-0 p-5 no-underline bg-gradient-to-t to-50% from-blue-500 hover:from-blue-400 active:from-blue-600 border-l-2"
-                  >
-                    Login
-                  </Link>
+                  {!Cookies.get("loggedin") && (
+                    <Link
+                      href="/login"
+                      className="m-0 p-5 no-underline bg-gradient-to-t to-50% from-blue-500 hover:from-blue-400 active:from-blue-600 border-l-2"
+                    >
+                      Signup or login
+                    </Link>
+                  )}
+                  {Cookies.get("loggedin") && (
+                    <Link
+                      href="/manageAccount"
+                      className="m-0 p-5 no-underline bg-gradient-to-t to-50% from-blue-500 hover:from-blue-400 active:from-blue-600 border-l-2"
+                    >
+                      Manage Account
+                    </Link>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col p-5 justify-center place-items-center w-full">

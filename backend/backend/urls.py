@@ -17,13 +17,13 @@ Including another URLconf
 
 from django.urls import include, path
 
-from rest_framework.authtoken import views as authviews
 from . import views
 
 urlpatterns = [
-    path("api/login/", authviews.obtain_auth_token),
+    path("api/getCsrf/", views.SetCsrfView.as_view()),
+    path("api/login/", views.LoginView.as_view()),
     path("api/logout/", views.LogoutView.as_view()),
-    path("api/addUser/", views.NewUserView.as_view()),
+    path("api/signup/", views.NewUserView.as_view()),
     path("api/manageUser/", views.ManageUserView.as_view()),
     path("api/", include("shortener.urls")),
 ]

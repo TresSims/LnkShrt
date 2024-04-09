@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(label="Username", write_only=True)
+    username = serializers.EmailField(label="Username", write_only=True)
     password = serializers.CharField(
         label="Password",
         style={"input_type": "password"},
@@ -34,7 +34,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class NewUserSerializer(serializers.Serializer):
-    username = serializers.CharField(label="Username", write_only=True)
+    username = serializers.EmailField(label="Username", write_only=True)
     password = serializers.CharField(
         label="Password",
         style={"input_type": "password"},
