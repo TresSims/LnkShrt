@@ -2,29 +2,37 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import JSONParser
+from rest_framework import permissions
 
 from django.shortcuts import redirect
 
-from .models import Link
+from .models import Link, get_sentinel_user
 from .serializers import LinkSerializer
 
 
 # View for interacting with individual links
 class LinkView(APIView):
     http_method_names = ["get", "post", "delete"]
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = [JSONParser]
 
     # Create a new shortlink
     def post(self, request, id=-1):
-        data = JSONParser().parse(request)
 
         # Return existing link if one exists
-        existing_links = Link.objects.filter(link=data["link"])
+        existing_links = Link.objects.filter(link=request.data["link"])
         if len(existing_links) > 0:
             serializer = LinkSerializer(existing_links[0])
             return JsonResponse(serializer.data)
 
-        # Create new link if there is no existing link
-        serializer = LinkSerializer(data=data)
+        # Create new link if there is no existing lin
+        # If the request is anonymous, use the anon user, otherwise use request user
+        if request.user.is_authenticated:
+            request.data["owner"] = request.user.id
+        else:
+            request.data["owner"] = get_sentinel_user()
+
+        serializer = LinkSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
@@ -46,14 +54,20 @@ class LinkView(APIView):
 
     # Delete link
     def delete(self, request, id=-1):
+        # Check for link existence
         try:
             link = Link.objects.get(id=id)
-            link.delete()
         except Link.DoesNotExist:
             return JsonResponse({}, status=404)
 
-        serializer = LinkSerializer(link)
-        return JsonResponse(serializer.data, status=204)
+        # Check if link is owned by the user, or is owned by the public (anon)
+        if link.owner.id in [request.user.id, get_sentinel_user()]:
+            link.delete()
+            serializer = LinkSerializer(link)
+            return JsonResponse(serializer.data, status=204)
+
+        else:
+            return JsonResponse({}, status=403)
 
 
 # View for interacting with lists of links
@@ -61,12 +75,18 @@ class LinkListView(APIView, PageNumberPagination):
     serializer_class = LinkSerializer
     page_size = 5
     page_size_query_param = "page_size"
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        entity = Link.objects.all()
+        user_arr = [get_sentinel_user()]
+        if request.user.is_authenticated:
+            user_arr.append(request.user.id)
+
+        entity = Link.objects.filter(owner__in=user_arr)
+
         results = self.paginate_queryset(entity, request, view=self)
         serializer = LinkSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
     def post(self, request):
-        get(request)
+        self.get(request)

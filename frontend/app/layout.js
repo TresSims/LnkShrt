@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
                     Home
                   </Link>
                   <Link
-                    href="/remove"
+                    href="/manage"
                     className="m-0 p-5 no-underline bg-gradient-to-t to-50% from-blue-500 hover:from-blue-400 active:from-blue-600 border-r-2"
                   >
                     Link List
