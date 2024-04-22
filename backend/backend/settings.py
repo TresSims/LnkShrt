@@ -32,7 +32,11 @@ SECRET_KEY = env.str(
 PRODUCTION = env.bool("DJANGO_PRODUCTION", default=False)
 DEBUG = False if PRODUCTION else env.bool("DJANGO_DEBUG", default=True)
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3001"]
+ENV_CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS")
+CSRF_TRUSTED_ORIGINS = [
+    ENV_CSRF_TRUSTED_ORIGINS,  # Specify production environment
+    "http://localhost:3001",  # development environemnt default
+]
 
 # Application definition
 
