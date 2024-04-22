@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -13,9 +13,11 @@ export default function LoginPage() {
   const [login, setLogin] = useState(false);
   const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedin"));
 
-  if (!Cookies.get("loggedin")) {
-    router.push("/login");
-  }
+  useEffect(() => {
+    if (!Cookies.get("loggedin")) {
+      router.push("/login");
+    }
+  });
 
   return <ManageAccount />;
 }
