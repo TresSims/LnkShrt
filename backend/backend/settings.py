@@ -141,7 +141,7 @@ if use_s3:
     AWS_S3_COBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     AWS_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    STATICFILES_STORAGE = "storages.backends.s3boto3.s3Boto3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
 
 else:
     STATIC_URL = "static/"
