@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "zygoat_django",
     "shortener.apps.ShortenerConfig",
     "rest_framework.authtoken",
-    "storages",
+    "django_s3_storage",
 ]
 
 MIDDLEWARE = [
@@ -133,15 +133,15 @@ USE_TZ = True
 
 use_s3 = os.getenv("DJANGO_PRODUCTION") == "True"
 if use_s3:
-    AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_REGION = "us-east-2"
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_BUCKET_NAME_STATIC = os.getenv("AWS_STORAGE_BUCKET_NAME")
     AWS_DEFAULT_ACL = "public-read"
-    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
-    AWS_S3_COBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_S3_BUCKET_NAME_STATIC}.s3.amazonaws.com"
     AWS_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    STATICFILES_STORAGE = "storages.backends.s3.S3Storage"
+    STATICFILES_STORAGE = "django_s3_storage.storage.StaticS3Storage"
 
 else:
     STATIC_URL = "static/"
