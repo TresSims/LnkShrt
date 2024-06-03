@@ -5,46 +5,37 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import Axios from "axios";
 import ErrorText from "./errorText";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 export default function ManageAccount() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const changePassword = async (event) => {
-    event.preventDefault();
+  const changePassword = (values) => {
+    let body = {
+      password: values.password1,
+    };
 
-    pass1 = event.target.pass1.value;
-    pass2 = event.target.pass2.value;
-    console.log(pass1 + " " + pass2);
+    let csrf = Cookies.get("csrftoken");
+    let headers = {
+      headers: {
+        "X-CSRFToken": csrf,
+      },
+    };
 
-    if (pass1 == pass2) {
-      let body = {
-        password: pass1,
-      };
-
-      let csrf = Cookies.get("csrftoken");
-      let headers = {
-        headers: {
-          "X-CSRFToken": csrf,
-        },
-      };
-
-      Axios.post("/api/manageUser/", body, headers)
-        .then((response) => {
-          setError("");
-          Cookies.remove("loggedin");
-          router.push("/login");
-        })
-        .catch((error) => {
-          setError("Something went wrong, try again later.");
-          console.log(error);
-        });
-    } else {
-      setError("passwords must match");
-    }
+    Axios.post("/api/manageUser/", body, headers)
+      .then((response) => {
+        setError("");
+        Cookies.remove("loggedin");
+        router.push("/login");
+      })
+      .catch((error) => {
+        setError("Something went wrong, try again later.");
+        console.log(error);
+      });
   };
 
-  const deleteAccount = async (event) => {
+  const deleteAccount = (event) => {
     let csrf = Cookies.get("csrftoken");
     let headers = {
       headers: {
@@ -63,7 +54,7 @@ export default function ManageAccount() {
       });
   };
 
-  const logOut = async (event) => {
+  const logOut = (event) => {
     let csrf = Cookies.get("csrftoken");
     let headers = {
       headers: {
@@ -84,34 +75,49 @@ export default function ManageAccount() {
 
   return (
     <div>
-      {/* <p className="text-white text-lg pb-4">User Email</p> */}
-      <form
-        onSubmit={changePassword}
-        className="flex flex-col space-around w-full border-2 border-solid border-white rounded-md p-4"
+      <Formik
+        initialValues={{ password1: "", password2: "" }}
+        validate={(values) => {
+          const errors = {};
+          if (!values.password1) {
+            errors.password1 = "Requried";
+          } else if (values.password1 != values.password2) {
+            errors.password1 = "Passwords do not match";
+            errors.password2 = "Passwords do not match";
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          changePassword(values);
+        }}
       >
-        <label className="text-white text-lg pb-2">Change Password</label>
-        <ErrorText error={error} />
-        <input
-          required
-          type="password"
-          id="pass1"
-          className="flex-grow rounded-full px-5 p-2 m-1 text-black"
-          placeholder="new password"
-        />
-        <input
-          required
-          type="password"
-          id="pass2"
-          className="flex-grow rounded-full px-5 p-2 m-1 text-black"
-          placeholder="confirm new password"
-        />
-        <button
-          type="submit"
-          className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-lg rounded-full w-48"
-        >
-          Change Password
-        </button>
-      </form>
+        {({ isSubmitting }) => (
+          <Form className="flex flex-col space-around w-full border-2 border-solid border-white rounded-md p-4">
+            <label className="text-white text-lg pb-2">Change Password</label>
+            <Field
+              type="password"
+              id="password1"
+              className="flex-grow rounded-full px-5 p-2 m-1 text-black"
+              placeholder="new password"
+            />
+            <ErrorMessage name="password1" component="div" />
+            <Field
+              required
+              type="password"
+              id="password2"
+              className="flex-grow rounded-full px-5 p-2 m-1 text-black"
+              placeholder="confirm new password"
+            />
+            <ErrorMessage name="password2" component="div" />
+            <button
+              type="submit"
+              className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-lg rounded-full w-48"
+            >
+              Change Password
+            </button>
+          </Form>
+        )}
+      </Formik>
       <div className="flex flex-row-reverse m-2 mt-10 text-white font-black">
         <button
           onClick={deleteAccount}

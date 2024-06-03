@@ -4,18 +4,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Axios from "axios";
 import Cookies from "js-cookie";
-import ErrorText from "./errorText";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 export default function Login() {
   const router = useRouter();
   const [error, setError] = useState("");
 
-  const login = async (event) => {
-    event.preventDefault();
-
+  const login = (values) => {
     let body = {
-      username: event.target.email.value,
-      password: event.target.pass.value,
+      username: values.username,
+      password: values.password,
     };
 
     let csrf = Cookies.get("csrftoken");
@@ -37,29 +35,48 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={login} className="flex flex-col space-around w-full">
-      <label className="text-white font-black text-lg pb-4">Login</label>
-      <ErrorText error={error} />
-      <input
-        required
-        type="email"
-        id="email"
-        className="flex-grow rounded-full px-5 p-2 m-1 text-black"
-        placeholder="you@example.com"
-      />
-      <input
-        required
-        type="password"
-        id="pass"
-        className="flex-grow rounded-full px-5 p-2 m-1 text-black"
-        placeholder="password"
-      />
-      <button
-        type="submit"
-        className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-lg rounded-full w-48"
-      >
-        Login
-      </button>
-    </form>
+    <Formik
+      initialValues={{ email: "", password: "" }}
+      validate={(values) => {
+        const errors = {};
+        if (!values.email) {
+          errors.email = "Required";
+        } else if (
+          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+        ) {
+          errors.email = "Invalid email address";
+        }
+        return errors;
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        login(values);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Form className="flex flex-col space-around w-full">
+          <Field
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            className="flex-grow rounded-full px-5 p-2 m-1 text-black"
+          />
+          <ErrorMessage name="email" component="div" />
+          <Field
+            type="password"
+            name="password"
+            className="flex-grow rounded-full px-5 p-2 m-1 text-black"
+            placeholder="password"
+          />
+          <ErrorMessage name="password" component="div" />
+          <button
+            type="submit"
+            className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-lg rounded-full w-48"
+            disabled={isSubmitting}
+          >
+            Login
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 }
