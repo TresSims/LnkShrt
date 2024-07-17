@@ -42,7 +42,7 @@ export default function Shortener() {
       <div className="flex flex-row space-around">
         <form
           onSubmit={mutation.mutate}
-          className="flex flex-col md:flex-row w-full"
+          className="flex flex-col lg:flex-row w-full"
         >
           <input
             type="text"
@@ -50,14 +50,14 @@ export default function Shortener() {
             name="link"
             id="link"
             required
-            className="flex-grow rounded-full px-5 p-2 text-xs md:text-lg text-black"
+            className="flex-grow rounded-full px-5 p-2 text-xs lg:text-lg text-black"
             onChange={(e) => validateURL(e)}
             placeholder="https://tres-sims.com/"
           />
           <button
             type="submit"
             disabled={!readyToSubmit}
-            className="p-2 md:ms-4 mt-4 md:mt-0 bg-orange-500 text-xs md:text-lg disabled:bg-gray-200 disabled:text-gray-400 hover:bg-amber-500 active:bg-amber-400 text-lg font-black rounded-full"
+            className="p-2 lg:ms-4 mt-4 lg:mt-0 bg-orange-500 text-xs lg:text-lg disabled:bg-gray-200 disabled:text-gray-400 hover:bg-amber-500 active:bg-amber-400 text-lg font-black rounded-full"
           >
             Shrtn It
           </button>

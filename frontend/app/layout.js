@@ -17,9 +17,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <QueryRoot>
           <div className="flex w-screen h-screen justify-center place-items-center p-4">
-            <div className="bg-slate-900 md:w-8/12 w-full h-full md:h-auto max-h-full rounded-md flex flex-col overflow-hidden">
+            <div className="bg-slate-900 lg:w-8/12 w-full h-full lg:h-auto max-h-full rounded-md flex flex-col overflow-hidden">
               {" "}
-              <div className="flex flex-row place-content-between text-xs md:text-lg font-black text-orange-500">
+              <div className="flex flex-row place-content-between text-xs lg:text-lg font-black text-orange-500">
                 <div className="flex flex-row ">
                   <Link
                     href="/"
@@ -44,8 +44,8 @@ export default function RootLayout({ children }) {
                 </div>
               </div>
               <div className="p-4 flex flex-col justify-center place-items-center bottom-0 w-full">
-                <h1 className="text-xl md:text-5xl py-50">LnkShrt_</h1>
-                <h2 className="collapse md:visible italic text-slate-700">
+                <h1 className="text-xl lg:text-5xl py-50">LnkShrt_</h1>
+                <h2 className="collapse lg:visible italic text-slate-700">
                   Yet another link shortener
                 </h2>
                 {children}

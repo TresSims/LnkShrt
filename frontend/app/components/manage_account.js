@@ -92,7 +92,7 @@ export default function ManageAccount() {
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="flex flex-col space-around w-full border-2 border-solid border-white rounded-md p-4 text-sm md:text-lg">
+          <Form className="flex flex-col space-around w-full border-2 border-solid border-white rounded-md p-4 text-sm lg:text-lg">
             <label className="text-white text-lg pb-2">Change Password</label>
             <Field
               type="password"
@@ -118,16 +118,16 @@ export default function ManageAccount() {
           </Form>
         )}
       </Formik>
-      <div className="flex flex-row-reverse m-2 mt-10 text-white font-black text-sm md:text-lg">
+      <div className="flex flex-row-reverse m-2 mt-10 text-white font-black text-sm lg:text-lg">
         <button
           onClick={deleteAccount}
-          className="flex flex-row text-xs md:text-lg m-2 bg-red-500 hover:bg-red-400 active:bg-red-600 p-2 px-4 rounded-full "
+          className="flex flex-row text-xs lg:text-lg m-2 bg-red-500 hover:bg-red-400 active:bg-red-600 p-2 px-4 rounded-full "
         >
           Delete Account
         </button>
         <button
           onClick={logOut}
-          className="flex flex-row m-2 text-xs md:text-lg bg-blue-500 hover:bg-blue-400 active:bg-blue-600 p-2 px-4 rounded-full "
+          className="flex flex-row m-2 text-xs lg:text-lg bg-blue-500 hover:bg-blue-400 active:bg-blue-600 p-2 px-4 rounded-full "
         >
           Log Out
         </button>
