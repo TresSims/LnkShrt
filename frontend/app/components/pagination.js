@@ -26,7 +26,7 @@ export default function Pagination({ page, entries, pageLength, goToPage }) {
     <div className="flex flex-row justify-between">
       <button
         onClick={decrementPage}
-        className="w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4"
+        className="text-xs md:text-lg w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4"
       >
         Previous Page
       </button>
@@ -37,7 +37,7 @@ export default function Pagination({ page, entries, pageLength, goToPage }) {
               <button
                 onClick={() => goToPage(i + 1)}
                 key={i}
-                className="bg-white rounded-full w-10 h-10 mx-2"
+                className="text-xs md:text-lg bg-white rounded-full w-10 h-10 mx-2"
               >
                 {i + 1}
               </button>
@@ -47,7 +47,7 @@ export default function Pagination({ page, entries, pageLength, goToPage }) {
               <button
                 onClick={() => goToPage(i + 1)}
                 key={i}
-                className="rounded-full border-2 w-10 h-10 mx-2"
+                className="text-xs md:text-lg rounded-full border-2 w-10 h-10 mx-2"
               >
                 {i + 1}
               </button>
@@ -57,7 +57,7 @@ export default function Pagination({ page, entries, pageLength, goToPage }) {
       </div>
       <button
         onClick={incrementPage}
-        className="w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4 "
+        className="text-xs md:text-lg w-48 bg-blue-500 hover:bg-blue-400 active:bg-blue-600 rounded-full text-white font-black py-2 px-4 "
       >
         Next Page
       </button>

@@ -18,7 +18,8 @@ const getData = async (page, pageSize) => {
 export default function Remove() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  let pageSize = 5;
+  const [pageSize, setPageSize] = useState(window.innerHeight >= 530 ? 5 : 2);
+  const [showDelete, setShowDelete] = useState(window.innerWidth >= 750);
 
   const paginate = (newPage) => {
     setCurrentPage(newPage);
@@ -39,6 +40,15 @@ export default function Remove() {
     }
   }, [error]);
 
+  useEffect(() => {
+    let handleResize = () => {
+      setShowDelete(window.innerWidth >= 750);
+      setPageSize(window.innerHeight >= 530 ? 5 : 2);
+    };
+
+    window.addEventListener("resize", handleResize);
+  });
+
   return (
     <>
       <div className="table text-white w-full rounded-md">
@@ -47,7 +57,9 @@ export default function Remove() {
             <div className="table-cell border-b-2 p-2">Short Link</div>
             <div className="table-cell border-b-2 p-2">Long Link</div>
             <div className="table-cell border-b-2 p-2">Copy Link</div>
-            <div className="table-cell border-b-2 p-2">Remove Link</div>
+            {showDelete && (
+              <div className="table-cell border-b-2 p-2">Remove Link</div>
+            )}
           </div>
         </div>
         {isPending && <p>Loading...</p>}
