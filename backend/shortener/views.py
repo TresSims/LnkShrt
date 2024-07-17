@@ -10,6 +10,9 @@ from .models import Link, get_sentinel_user
 from .serializers import LinkSerializer
 
 
+from url_cleaner import UrlCleaner
+
+
 # View for interacting with individual links
 class LinkView(APIView):
     http_method_names = ["get", "post", "delete"]
@@ -31,6 +34,11 @@ class LinkView(APIView):
             request.data["owner"] = request.user.id
         else:
             request.data["owner"] = get_sentinel_user()
+
+        if request.data["link"]:
+            cleaner = UrlCleaner()
+            clean_link = cleaner.clean(request.data["link"])
+            request.data["link"] = clean_link
 
         serializer = LinkSerializer(data=request.data)
         if serializer.is_valid():

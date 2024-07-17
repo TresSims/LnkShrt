@@ -25,6 +25,7 @@ django-anymail = "^10.2"
 zygoat-django = "^1.0.1"
 psycogreen = "^1.0.2"
 django-s3-storage = "^0.15.0"
+url-cleaner = "^0.1.5"
 
 [tool.poetry.dependencies.gunicorn]
 extras = [ "gevent",]
