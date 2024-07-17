@@ -40,9 +40,9 @@ export default function Remove() {
   }, [error]);
 
   return (
-    <div>
+    <>
       <div className="table text-white w-full rounded-md">
-        <div className="table-header-group text-lg font-black">
+        <div className="table-header-group text-sm md:text-lg font-black">
           <div className="table-row">
             <div className="table-cell border-b-2 p-2">Short Link</div>
             <div className="table-cell border-b-2 p-2">Long Link</div>
@@ -64,6 +64,6 @@ export default function Remove() {
           goToPage={paginate}
         />
       )}
-    </div>
+    </>
   );
 }

@@ -53,7 +53,7 @@ export default function Login() {
       }}
     >
       {({ isSubmitting }) => (
-        <Form className="flex flex-col space-around w-full">
+        <Form className="flex flex-col space-around w-full text-sm md:text-lg">
           <Field
             type="email"
             name="email"
@@ -70,7 +70,7 @@ export default function Login() {
           <ErrorMessage name="password" component="div" />
           <button
             type="submit"
-            className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-lg rounded-full w-48"
+            className="ms-10 font-black text-white bg-orange-500 disabled:bg-gray-200 p-2 self-end hover:bg-amber-500 active:bg-amber-400 text-xs md:text-lg rounded-full w-48"
             disabled={isSubmitting}
           >
             Login

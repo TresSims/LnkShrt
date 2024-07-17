@@ -50,14 +50,14 @@ export default function Shortener() {
             name="link"
             id="link"
             required
-            className="flex-grow rounded-full px-5 p-2 text-sm text-black"
+            className="flex-grow rounded-full px-5 p-2 text-xs md:text-lg text-black"
             onChange={(e) => validateURL(e)}
             placeholder="https://tres-sims.com/"
           />
           <button
             type="submit"
             disabled={!readyToSubmit}
-            className="p-2 md:ms-4 mt-4 md:mt-0 bg-orange-500 text-sm disabled:bg-gray-200 disabled:text-gray-400 hover:bg-amber-500 active:bg-amber-400 text-lg font-black rounded-full"
+            className="p-2 md:ms-4 mt-4 md:mt-0 bg-orange-500 text-xs md:text-lg disabled:bg-gray-200 disabled:text-gray-400 hover:bg-amber-500 active:bg-amber-400 text-lg font-black rounded-full"
           >
             Shrtn It
           </button>
