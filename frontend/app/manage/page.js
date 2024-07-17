@@ -18,8 +18,8 @@ const getData = async (page, pageSize) => {
 export default function Remove() {
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(window.innerHeight >= 530 ? 5 : 2);
-  const [showDelete, setShowDelete] = useState(window.innerWidth >= 750);
+  const [pageSize, setPageSize] = useState(5);
+  const [showDelete, setShowDelete] = useState(true);
 
   const paginate = (newPage) => {
     setCurrentPage(newPage);
@@ -46,6 +46,7 @@ export default function Remove() {
       setPageSize(window.innerHeight >= 530 ? 5 : 2);
     };
 
+    handleResize();
     window.addEventListener("resize", handleResize);
   });
 
