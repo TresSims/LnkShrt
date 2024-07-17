@@ -16,8 +16,8 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <QueryRoot>
-          <div className="flex w-screen h-screen justify-center place-items-center">
-            <div className="bg-slate-900 w-8/12 rounded-md flex flex-col overflow-hidden">
+          <div className="flex w-screen h-screen justify-center place-items-center p-4">
+            <div className="bg-slate-900 md:w-8/12 w-full h-full md:h-auto rounded-md flex flex-col overflow-hidden">
               <div className="flex flex-row place-content-between text-lg font-black text-orange-500">
                 <div className="flex flex-row ">
                   <Link
@@ -43,8 +43,8 @@ export default function RootLayout({ children }) {
                 </div>
               </div>
               <div className="flex flex-col p-5 justify-center place-items-center w-full">
-                <h1 className="text-5xl py-50 my-5">LnkShrt_</h1>
-                <h2 className="text-2xl italic text-slate-700">
+                <h1 className="text-2xl md:text-5xl py-50">LnkShrt_</h1>
+                <h2 className="text-md md:text-2xl italic text-slate-700">
                   Yet another link shortener
                 </h2>
                 {children}
