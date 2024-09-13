@@ -184,6 +184,3 @@ pyrightconfig.json
 
 # Virtual Environments
 venv/
-
-# playwright test example
-example.spec.js
